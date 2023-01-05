@@ -50,6 +50,21 @@ int	ft_putnmbr(int	i)
 	return (ft_putstr(nmbr));
 }
 
+int	ft_put_p(unsigned long long n, char *b, int b_size, int frist_exec)
+{
+	int	c_count;
+
+	c_count = 0;
+	if (!n && frist_exec == 0)
+		return (write(1, "(nil)", 5));
+	if (frist_exec == 0)
+		c_count += ft_putstr("0x");
+	if (n / b_size > 0)
+		c_count += ft_put_p(n / b_size, b, b_size, 1);
+	c_count += write(1, &b[n % b_size], 1);
+	return (c_count);
+}
+
 int	ft_va_args(va_list args, const char fmt, int print_len)
 {
 	print_len = 0;
@@ -61,6 +76,8 @@ int	ft_va_args(va_list args, const char fmt, int print_len)
 		print_len += ft_putstr(va_arg(args, char *));
 	else if (fmt == 'd' || fmt == 'i')
 		print_len += ft_putnmbr(va_arg(args, int));
+	else if (fmt == 'p')
+		print_len += ft_put_p(va_arg(args, long int), "0123456789abcdef", 16, 0);
 	return (print_len);
 }
 
@@ -89,16 +106,15 @@ int	ft_printf(const char *str, ...)
 int	main	(void)
 {
 	int i, j;
-	/* float	o; */
 	char *str;
 
 	i = 37122;
 	j = 12;
-	str = "My name is Manuel\n";
+	str = "Usa the boss\n";
 	/* o = 11.233444; */
-	ft_printf("%s %s,\n feito?\n\n\n", "asdasd", str);
-	printf("%i %s %i %s,\n feito?\n\n\n", i, str, i, str);
-	/* printf("número é %%%%%d\n e a string é: %s,\n feito?\n\n\n%s", i, str, "O meu nome é Manuel\n\n\n\n");
+	ft_printf("%p,\n feito?\n\n\n", "100");
+	printf("%p %p,\n feito?\n\n\n", "100", "Usa the boss\n");
+	/* printf("número é %%%%%d\n e a string é: %s,\n feito?\n\n\n%s", i, str, "Usa the boss\n\n\n\n");
 	foo("\n\n\n%p\n\n\n", &str);
 	printf("o: %f\n", o);
 	printf("d: %d\n", i);*/
